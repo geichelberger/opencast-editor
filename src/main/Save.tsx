@@ -146,19 +146,13 @@ export const SaveButton: React.FC = () => {
       return t("save.success-tooltip-aria");
     }
   };
-
-  const prepareSubtitles = () => {
-    const subtitlesForPosting = [];
-
-    for (const identifier in subtitles) {
-      subtitlesForPosting.push({
-        id: identifier,
-        subtitle: serializeSubtitle(subtitles[identifier].cues),
-        tags: subtitles[identifier].tags,
-      });
-    }
-    return subtitlesForPosting;
-  };
+  const prepareSubtitles = () =>
+    Object.entries(subtitles).map(([id, { deleted, cues, tags }]) => ({
+      id,
+      subtitle: deleted ? "" : serializeSubtitle(cues),
+      tags: deleted ? [] : tags,
+      deleted,
+    }));
 
   // Dispatches first save request
   // Subsequent save requests should be wrapped in useEffect hooks,
